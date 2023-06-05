@@ -28,7 +28,7 @@ jobs:
     - name: Building the web app and push image to Amazon ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: webapp_nubila_ecr
+        ECR_REPOSITORY: babajide-webapp
         IMAGE_TAG: v0.1
       run: |
         cd web_app/
@@ -41,7 +41,7 @@ jobs:
     - name: Building the sql and push image to Amazon ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: sql_nubila_ecr
+        ECR_REPOSITORY: babajide-mysql
         IMAGE_TAG: v0.1
       run: |
         cd sql_app/
