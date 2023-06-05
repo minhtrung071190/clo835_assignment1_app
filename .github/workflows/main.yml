@@ -2,7 +2,7 @@ name: Deploy to ECR
 # updated secrets
 on: 
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   
@@ -33,12 +33,10 @@ jobs:
         SQL_REPOSITORY: my_db_1
         IMAGE_TAG: v0.1
       run: |
-        cd Chapter02/kubia/
-        ls -ltra
+        
         # Docker build command
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile l .
         docker build -t $ECR_REGISTRY/$SQL_REPOSITORY:$IMAGE_TAG -f Dockerfile_mysql .
-        # Unit test
-        #docker run -d -p 80:8080 --name nodeapp $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+              
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$SQL_REPOSITORY:$IMAGE_TAG
