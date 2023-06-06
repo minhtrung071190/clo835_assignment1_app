@@ -34,7 +34,8 @@ jobs:
         IMAGE_TAG: v0.1
       run: |
         # Docker build command
-        docker build -t $ECR_REGISTRY/$SQL_REPOSITORY:$IMAGE_TAG Dockerfile_mysql .
-        docker build -t $ECR_REGISTRY/$WEB_REPOSITORY:$IMAGE_TAG Dockerfile .
-        docker push $ECR_REGISTRY/SQL_REPOSITORY:$IMAGE_TAG
+        docker build -t $ECR_REGISTRY/$SQL_REPOSITORY:$IMAGE_TAG -f Dockerfile_mysql .
+        docker build -t $ECR_REGISTRY/$WEB_REPOSITORY:$IMAGE_TAG -f Dockerfile .
+        docker push $ECR_REGISTRY/$SQL_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$WEB_REPOSITORY:$IMAGE_TAG
+
