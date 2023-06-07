@@ -38,3 +38,4 @@ resource "aws_ecr_repository" "webapp_repo" {
 resource "aws_ecr_repository" "mysql_repo" {
   name = "mysql"
 }
+
