@@ -39,5 +39,5 @@ resource "aws_ecr_repository" "mysql-ecr" {
 #Resource to create a SSH private key
 resource "aws_key_pair" "nila_key" {
   key_name   = "no_name"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCt+EjU2a36DsUvlnfxi7vZJo/WOQVfrE3qT4tl1rw6sPkaK+AFXXtDS5RDuDq72xCMK8aHd5HoQfivBJgp34WlcMqYKM0wf71ommoKiqqsdzE4QsyyCwQyuVMt6fK6DtUViqXynlpmj0zG7txDcz8pnHoaeDXb1LaAy1GFWbmxpvQPwH38e7YZMyTqzm6nTc0aJTcXK/r31kW3IZkWt7fRaHxKyqHBLk24YckuNnFOl6tiK8SL23fEU74VSNQ49C3uzjlL1skTw6iy3QBnyPb3FemUwwHzEMeUlFmUheEmXtQkoz9DwSbHhV8YBCQFJ6JHqu1/SVrgUpQVeB3xDd/N ec2-user@ip-172-31-69-108.ec2.internal"
+  public_key = ""
 }
