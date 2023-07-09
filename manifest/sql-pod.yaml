@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql-pod
+  labels:
+    app: mysql
+    component: backend
+
+spec:
+  containers:
+  - name: mysql-db
+    image: 380544824653.dkr.ecr.us-east-1.amazonaws.com/mkhan348-docker-assignment:dbv1.0
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: pass123  # Replace with your desired MySQL root password
+    - name: MYSQL_DATABASE
+      value: employees
+    ports:
+        - containerPort: 3306
+          protocol: TCP
