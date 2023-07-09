@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webserver
+  labels:
+    app: employees
+    component: frontend
+spec:
+  selector:
+    matchLabels:
+      app: employees
+      component: frontend
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: employees
+        component: frontend
+    spec:
+      containers:
+      - name: webserver
+        image: 380544824653.dkr.ecr.us-east-1.amazonaws.com/mkhan348-docker-assignment:appv1.1
+        env:
+        - name: DBHOST
+          value: mysql.myns.svc.cluster.local  # Replace with the hostname of your MySQL service
+        - name: DBUSER
+          value: root
+        - name: DBPWD
+          value: pass123  # Replace with your MySQL password
+        - name: DATABASE
+          value: employees  # Replace with your MySQL database name
+        
+        ports:
+        - containerPort: 8080
