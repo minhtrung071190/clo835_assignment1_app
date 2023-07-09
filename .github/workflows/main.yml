@@ -38,4 +38,3 @@ jobs:
         docker build -t $ECR_REGISTRY/$WEB_REPOSITORY:$IMAGE_TAG -f Dockerfile .
         docker push $ECR_REGISTRY/$SQL_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$WEB_REPOSITORY:$IMAGE_TAG
-
