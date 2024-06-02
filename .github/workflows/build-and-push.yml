@@ -2,7 +2,7 @@ name: Deploy to ECR
 # updated ECR Repo Assignment1
 on: 
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   
