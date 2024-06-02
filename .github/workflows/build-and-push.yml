@@ -1,5 +1,5 @@
 name: Deploy to ECR
-# updated ECR Repo Assignment1
+# updated ECR Repo webapp and mysql
 on: 
   push:
     branches: [ main ]
