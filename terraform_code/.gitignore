@@ -1,0 +1,20 @@
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Backup files created by Terraform
+*.backup
+
+# Crash log files
+crash.log
+
+# .terraform directory
+.terraform/
+
+# Local .terraform configurations
+.terraform.tfstate
+.terraform.tfstate.backup
+
+# Terraform plan files
+*.tfplan
+
