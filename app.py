@@ -101,7 +101,7 @@ def FetchData():
         output["primary_skills"] = result[3]
         output["location"] = result[4]
         
-    except Exception as e:
+    except Exception as e: 
         print(e)
 
     finally:
