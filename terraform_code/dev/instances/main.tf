@@ -110,3 +110,11 @@ resource "aws_eip" "static_eip" {
     }
   )
 }
+resource "aws_ecr_repository" "mysql" {
+  name = "mysql"
+}
+
+# Create ECR repository for WebApp
+resource "aws_ecr_repository" "webapp" {
+  name = "webapp"
+}
