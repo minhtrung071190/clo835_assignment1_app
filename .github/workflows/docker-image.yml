@@ -1,4 +1,5 @@
-name: Deploy to ECR
+
+name: Deploy to ECR phase1
 
 on:
   push:
