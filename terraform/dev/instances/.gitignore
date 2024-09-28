@@ -1,0 +1,12 @@
+# Ignore Terraform state and backup files
+.terraform
+
+# Ignore Terraform cache and provider files
+.terraform/
+
+# Optionally ignore the lock file
+.terraform.lock.hcl
+
+# Exclude SSH keys (if sensitive)
+assignmentdocker-dev
+assignmentdocker-dev.pub
