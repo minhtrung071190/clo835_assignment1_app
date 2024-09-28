@@ -169,3 +169,13 @@ resource "aws_ecr_repository" "my_ecr_repo" {
     }
   )
 }
+resource "aws_ecr_repository" "mysql_ecr_repo" {
+  name                 = lower("${local.name_prefix}-mysql-ecr-repo")
+  image_tag_mutability = "MUTABLE"
+  
+  tags = merge(local.default_tags,
+    {
+      "Name" = "${local.name_prefix}-mysql-ecr-repo"
+    }
+  )
+}
