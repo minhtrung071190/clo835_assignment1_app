@@ -1,7 +1,8 @@
-name: Build and Push to ECR
+name: CI-CD of ECR
 
 on:
-  push:
+  pull_request:
+    types: -closed
     branches: [ main ]
 
 env:
