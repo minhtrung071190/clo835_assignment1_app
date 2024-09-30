@@ -100,6 +100,15 @@ resource "aws_security_group" "my_sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
+  
+  ingress {
+    description = "Custom TCP"
+    from_port   = 8081
+    to_port     = 8083
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
 
   egress {
     from_port        = 0
@@ -126,7 +135,7 @@ resource "aws_eip" "static_eip_my_instance_1" {
 }
 
 # Elastic Container Registry (ECR) - Create a new repository
-resource "aws_ecr_repository" "my_ecr_repo" {
+resource "aws_ecr_repository" "app_ecr_repo" {
   name                 = lower("${local.name_prefix}-ecr-repo")
   image_tag_mutability = "MUTABLE"
   tags = merge(local.default_tags,
