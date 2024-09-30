@@ -2,13 +2,14 @@ name: CI-CD of ECR
 
 on:
   pull_request:
-    types: -closed
-    branches: [ main ]
+    types: [closed]  # Use brackets for proper syntax
+    branches: [main]
 
 env:
   AWS_REGION: us-east-1  
   ECR_REPOSITORY_APP: assignmentdocker-dev-ecr-repo  
   ECR_REPOSITORY_MYSQL: assignmentdocker-dev-mysql-ecr-repo  
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -23,7 +24,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
-        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}  # Only include if using temporary credentials
 
     - name: Login to Amazon ECR
       id: login-ecr
