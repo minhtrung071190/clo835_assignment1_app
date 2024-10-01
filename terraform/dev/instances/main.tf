@@ -5,8 +5,7 @@
 #
 #----------------------------------------------------------
 
-# this is video recording purpose
-
+#this is for video purpose
 # Define the provider
 provider "aws" {
   region = "us-east-1"
