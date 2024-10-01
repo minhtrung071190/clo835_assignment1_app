@@ -5,6 +5,8 @@
 #
 #----------------------------------------------------------
 
+# this is video recording purpose
+
 # Define the provider
 provider "aws" {
   region = "us-east-1"
@@ -100,7 +102,6 @@ resource "aws_security_group" "my_sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
-  
   ingress {
     description = "Custom TCP"
     from_port   = 8081
