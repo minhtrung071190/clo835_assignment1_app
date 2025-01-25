@@ -31,6 +31,8 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: clo835-assignment1-repository
         IMAGE_TAG: ${{ github.run_number }}-${{ github.sha }}
+        DBPASS: ${{ secrets.DBPASS }}
+        DBUSER: ${{ secrets.DBUSER }}
       run: |
         ls -ltra
         # Docker build command
@@ -41,23 +43,19 @@ jobs:
         ## Create user-defined network
         docker network create my_app_network
         ## Run my_db
-        docker run -d --name my_db --network my_app_network -e MYSQL_ROOT_PASSWORD=pw  my_db
+        docker run -d --name my_db --network my_app_network -e MYSQL_ROOT_PASSWORD=$DBPASS  my_db
         ## Setup env variables
         export DBHOST=$(docker inspect -f '{{.NetworkSettings.Networks.my_app_network.IPAddress}}' my_db)
         export DBPORT=3306
-        export DBUSER=root
+        export DBUSER=$DBUSER
         export DATABASE=employees
-        export DBPWD=pw
+        export DBPWD=$DBPASS
         ## Run 3 apps blue, pink and lime
         docker run -d --name my_app_blue --network my_app_network -p 8081:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPWD  -e APP_COLOR="blue" my_app
         docker run -d --name my_app_pink --network my_app_network -p 8082:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPWD  -e APP_COLOR="pink" my_app
         docker run -d --name my_app_lime --network my_app_network -p 8083:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPWD  -e APP_COLOR="lime" my_app
-        ## Test app blue
-        curl localhost:8081 -vvv
-        ## Test app pink
-        curl localhost:8082 -vvv
-        ## Test app lime
-        curl localhost:8083 -vvv
+        ## Test 3 apps 
+        curl localhost:8081, 8082, 8083 -vvv
         
         # Publish images to ECR 
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:mysql-$IMAGE_TAG
