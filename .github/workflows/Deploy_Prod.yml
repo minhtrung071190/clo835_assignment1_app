@@ -1,7 +1,7 @@
 name: Push images to ECR and deploy app to EC2
 # updated ECR Repo  01/23
 on: 
-  push:
+  pull_request:
     branches: [ prod ]
 
 jobs:
