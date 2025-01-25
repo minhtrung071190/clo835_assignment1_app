@@ -1,7 +1,7 @@
 name: Build, Publish Images to ECR
 # updated ECR Repo  01/23
 on: 
-  push:
+  pull_request:
     branches: [ prod ]
 
 jobs:
