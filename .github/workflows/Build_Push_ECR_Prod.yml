@@ -39,3 +39,8 @@ jobs:
         # Publish images to ECR 
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:mysql-v$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
+
+    - name: Deploy new images to EC2
+      env:
+      run: |
+      
