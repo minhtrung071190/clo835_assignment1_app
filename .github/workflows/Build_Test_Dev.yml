@@ -29,11 +29,7 @@ jobs:
 
     - name: Get EC2 Public IP
       run: |
-        INSTANCE_NAME= "app_server" # Replace with the actual EC2 instance ID
-        PUBLIC_IP=$(aws ec2 describe-instances \
-          --instance-ids $INSTANCE_NAME \
-          --query 'Reservations[0].Instances[0].PublicIpAddress' \
-          --output text)
+        PUBLIC_IP=$(aws ec2 describe-instances --filter "Name=tag:Name, Values=app_server" --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
         echo "Public IP: $PUBLIC_IP"
     # - name: Build Images
     #   env:
