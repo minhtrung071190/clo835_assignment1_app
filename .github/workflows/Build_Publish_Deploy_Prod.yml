@@ -43,14 +43,7 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:mysql-v$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
 
-    - name: Get EC2 Public IP
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ github.run_number }}
-        ECR_REPOSITORY: clo835-assignment1-repository
-        DBPASS: ${{ secrets.DBPASS }}
-        DBUSER: ${{ secrets.DBUSER }}
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}         
+    - name: Get EC2 Public IP      
       run: |
         # Get public IP of app_server
         PUBLIC_IP=$(aws ec2 describe-instances --filter "Name=tag:Name, Values=app_server" --query 'Reservations[0].Instances[0].PublicIpAddress' --region us-east-1 --output text)
@@ -64,6 +57,12 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         port: 22
         script: |
+          ## Set environment variables
+          export ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+          export ECR_REPOSITORY=clo835-assignment1-repository
+          export IMAGE_TAG=${{ github.run_number }}
+          export DBPASS=${{ secrets.DBPASS }}
+          export DBUSER=${{ secrets.DBUSER }}
           ## Create user-defined network
           docker network create my_app_network || echo "Network already exists"
           ## Run my_db
