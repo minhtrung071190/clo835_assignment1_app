@@ -56,35 +56,35 @@ jobs:
         PUBLIC_IP=$(aws ec2 describe-instances --filter "Name=tag:Name, Values=app_server" --query 'Reservations[0].Instances[0].PublicIpAddress' --region us-east-1 --output text)
         echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
 
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.PUBLIC_IP }}
-          key: ${{ secrets.PRIVATE_KEY }}
-          port: 22
-          script: |
-            ## Create user-defined network
-            docker network create my_app_network || echo "Network already exists"
-            ## Run my_db
-            docker run -d --name my_db --network my_app_network -e MYSQL_ROOT_PASSWORD=$DBPASS  $ECR_REGISTRY/$ECR_REPOSITORY:mysql-v$IMAGE_TAG
-            # Wait for MySQL to be ready
-            until docker exec my_db mysqladmin -u root -p$DBPASS ping --silent; do
-              echo "Waiting for MySQL connection..."
-              sleep 30
-            done
-            # Setup env variables      
-            export DBHOST=$(docker inspect -f '{{.NetworkSettings.Networks.my_app_network.IPAddress}}' my_db)
-            export DBPORT=3306
-            export DBUSER=$DBUSER
-            export DATABASE=employees
-            export DBPWD=$DBPASS
-            ## Run 3 apps blue, pink and lime
-            docker run -d --name my_app_blue --network my_app_network -p 8081:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPASS  -e APP_COLOR="blue" $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
-            docker run -d --name my_app_pink --network my_app_network -p 8082:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPASS  -e APP_COLOR="pink" $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
-            docker run -d --name my_app_lime --network my_app_network -p 8083:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPASS  -e APP_COLOR="lime" $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
-            sleep 15
-            docker ps
-            ## Test 3 apps 
-            curl -I localhost:8081
-            curl -I localhost:8082
-            curl -I localhost:8083
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.PUBLIC_IP }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        port: 22
+        script: |
+          ## Create user-defined network
+          docker network create my_app_network || echo "Network already exists"
+          ## Run my_db
+          docker run -d --name my_db --network my_app_network -e MYSQL_ROOT_PASSWORD=$DBPASS  $ECR_REGISTRY/$ECR_REPOSITORY:mysql-v$IMAGE_TAG
+          # Wait for MySQL to be ready
+          until docker exec my_db mysqladmin -u root -p$DBPASS ping --silent; do
+            echo "Waiting for MySQL connection..."
+            sleep 30
+          done
+          # Setup env variables      
+          export DBHOST=$(docker inspect -f '{{.NetworkSettings.Networks.my_app_network.IPAddress}}' my_db)
+          export DBPORT=3306
+          export DBUSER=$DBUSER
+          export DATABASE=employees
+          export DBPWD=$DBPASS
+          ## Run 3 apps blue, pink and lime
+          docker run -d --name my_app_blue --network my_app_network -p 8081:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPASS  -e APP_COLOR="blue" $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
+          docker run -d --name my_app_pink --network my_app_network -p 8082:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPASS  -e APP_COLOR="pink" $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
+          docker run -d --name my_app_lime --network my_app_network -p 8083:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPASS  -e APP_COLOR="lime" $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
+          sleep 15
+          docker ps
+          ## Test 3 apps 
+          curl -I localhost:8081
+          curl -I localhost:8082
+          curl -I localhost:8083
