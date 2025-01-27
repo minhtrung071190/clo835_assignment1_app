@@ -33,58 +33,59 @@ jobs:
       run: |
         PUBLIC_IP=$(aws ec2 describe-instances --filter "Name=tag:Name, Values=app_server" --query 'Reservations[0].Instances[0].PublicIpAddress' --region us-east-1 --output text)
         echo "Public IP: $PUBLIC_IP"
-    # - name: Build Images
-    #   env:
-    #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-    #     ECR_REPOSITORY: clo835-assignment1-repository
-    #     IMAGE_TAG: ${{ github.run_number }}
-    #   run: |
-    #     # Docker build command
-    #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:mysql-v$IMAGE_TAG -f Dockerfile_mysql .
-    #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG -f Dockerfile .
-    # - name: Test mysql
-    #   env:
-    #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-    #     ECR_REPOSITORY: clo835-assignment1-repository
-    #     IMAGE_TAG: ${{ github.run_number }}
-    #     DBPASS: ${{ secrets.DBPASS }}
-    #     DBUSER: ${{ secrets.DBUSER }}
-    #   run: |
-    #     # Unit test
-    #     ## Create user-defined network
-    #     docker network create my_app_network
-    #     ## Run my_db
-    #     docker run -d --name my_db --network my_app_network -e MYSQL_ROOT_PASSWORD=$DBPASS  $ECR_REGISTRY/$ECR_REPOSITORY:mysql-v$IMAGE_TAG
-    #     # Wait for MySQL to be ready
-    #     until docker exec my_db mysqladmin -u root -p$DBPASS ping --silent; do
-    #       echo "Waiting for MySQL connection..."
-    #       sleep 30
-    #     done
-    # - name: Test app
-    #   env:
-    #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-    #     ECR_REPOSITORY: clo835-assignment1-repository
-    #     IMAGE_TAG: ${{ github.run_number }}
-    #     DBPASS: ${{ secrets.DBPASS }}
-    #     DBUSER: ${{ secrets.DBUSER }}  
-    #   run: |  
-    #     # Setup env variables      
-    #     export DBHOST=$(docker inspect -f '{{.NetworkSettings.Networks.my_app_network.IPAddress}}' my_db)
-    #     export DBPORT=3306
-    #     export DBUSER=$DBUSER
-    #     export DATABASE=employees
-    #     export DBPWD=$DBPASS
-    #     ## Run 3 apps blue, pink and lime
-    #     docker run -d --name my_app_blue --network my_app_network -p 8081:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPASS  -e APP_COLOR="blue" $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
-    #     docker run -d --name my_app_pink --network my_app_network -p 8082:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPASS  -e APP_COLOR="pink" $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
-    #     docker run -d --name my_app_lime --network my_app_network -p 8083:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPASS  -e APP_COLOR="lime" $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
-    #     sleep 15
-    #     docker ps
+
+    - name: Build Images
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: clo835-assignment1-repository
+        IMAGE_TAG: ${{ github.run_number }}
+      run: |
+        # Docker build command
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:mysql-v$IMAGE_TAG -f Dockerfile_mysql .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG -f Dockerfile .
+    - name: Test mysql
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: clo835-assignment1-repository
+        IMAGE_TAG: ${{ github.run_number }}
+        DBPASS: ${{ secrets.DBPASS }}
+        DBUSER: ${{ secrets.DBUSER }}
+      run: |
+        # Unit test
+        ## Create user-defined network
+        docker network create my_app_network
+        ## Run my_db
+        docker run -d --name my_db --network my_app_network -e MYSQL_ROOT_PASSWORD=$DBPASS  $ECR_REGISTRY/$ECR_REPOSITORY:mysql-v$IMAGE_TAG
+        # Wait for MySQL to be ready
+        until docker exec my_db mysqladmin -u root -p$DBPASS ping --silent; do
+          echo "Waiting for MySQL connection..."
+          sleep 30
+        done
+    - name: Test app
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: clo835-assignment1-repository
+        IMAGE_TAG: ${{ github.run_number }}
+        DBPASS: ${{ secrets.DBPASS }}
+        DBUSER: ${{ secrets.DBUSER }}  
+      run: |  
+        # Setup env variables      
+        export DBHOST=$(docker inspect -f '{{.NetworkSettings.Networks.my_app_network.IPAddress}}' my_db)
+        export DBPORT=3306
+        export DBUSER=$DBUSER
+        export DATABASE=employees
+        export DBPWD=$DBPASS
+        ## Run 3 apps blue, pink and lime
+        docker run -d --name my_app_blue --network my_app_network -p 8081:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPASS  -e APP_COLOR="blue" $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
+        docker run -d --name my_app_pink --network my_app_network -p 8082:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPASS  -e APP_COLOR="pink" $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
+        docker run -d --name my_app_lime --network my_app_network -p 8083:8080  -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e  DBUSER=$DBUSER -e DBPWD=$DBPASS  -e APP_COLOR="lime" $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
+        sleep 15
+        docker ps
        
-    #     ## Test 3 apps 
-    #     curl -I localhost:8081
-    #     curl -I localhost:8082
-    #     curl -I localhost:8083
+        ## Test 3 apps 
+        curl -I localhost:8081
+        curl -I localhost:8082
+        curl -I localhost:8083
 
     # - name: Create Pull Request to Prod
     #   if: success()
