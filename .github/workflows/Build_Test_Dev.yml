@@ -81,17 +81,10 @@ jobs:
         curl -I localhost:8083
     - name: Create Pull Request to Prod
       if: success()
-      uses: peter-evans/create-pull-request@v5
-      permissions:
-        contents: write
-        pull-requests: write
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        base: dev
-        branch: prod
-        title: "Automated PR: Promote changes from dev to prod"
-        body: "This pull request promotes changes from dev to prod."
-        draft: false
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh pr create -B dev -H prod --title 'Merge dev into prod' --body 'Update changes - by Github action'
 
     # - name: Publish Images to ECR
     #   env:
