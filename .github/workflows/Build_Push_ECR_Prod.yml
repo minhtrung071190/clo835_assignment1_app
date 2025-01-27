@@ -40,7 +40,17 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:mysql-v$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:app-v$IMAGE_TAG
 
-    - name: Deploy new images to EC2
-      env:
-      run: |
-      
+      - name: Get EC2 Public IP
+        run: |
+          INSTANCE_NAME= "app_server" # Replace with the actual EC2 instance ID
+          PUBLIC_IP=$(aws ec2 describe-instances \
+            --instance-ids $INSTANCE_NAME \
+            --query 'Reservations[0].Instances[0].PublicIpAddress' \
+            --output text)
+          echo "Public IP: $PUBLIC_IP"
+
+    # - name: Deploy new images to EC2
+    #   env:
+    #   run: |
+    #     echo {{ secrets.PRIVATE_KEY }} > key
+    #     ssh -i key 
