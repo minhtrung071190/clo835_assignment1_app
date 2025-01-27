@@ -29,11 +29,6 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Get EC2 Public IP
-      run: |
-        PUBLIC_IP=$(aws ec2 describe-instances --filter "Name=tag:Name, Values=app_server" --query 'Reservations[0].Instances[0].PublicIpAddress' --region us-east-1 --output text)
-        echo "Public IP: $PUBLIC_IP"
-
     - name: Build Images
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -87,12 +82,12 @@ jobs:
         curl -I localhost:8082
         curl -I localhost:8083
 
-    # - name: Create Pull Request to Prod
-    #   if: success()
-    #   env:
-    #       GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-    #   run: |
-    #     gh pr create -B prod -H dev --title 'Merge dev into prod' --body 'Update changes - by Github action'
+    - name: Create Pull Request to Prod
+      if: success()
+      env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+      run: |
+        gh pr create -B prod -H dev --title 'Merge dev into prod' --body 'Update changes - by Github action'
 
     # - name: Publish Images to ECR
     #   env:
