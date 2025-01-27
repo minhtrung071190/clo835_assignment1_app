@@ -56,7 +56,7 @@ jobs:
         PUBLIC_IP=$(aws ec2 describe-instances --filter "Name=tag:Name, Values=app_server" --query 'Reservations[0].Instances[0].PublicIpAddress' --region us-east-1 --output text)
         echo "Public IP: $PUBLIC_IP"
         # Deploy
-        echo "{{ secrets.PRIVATE_KEY }}"" > key
+        echo "{{ secrets.PRIVATE_KEY }}" > key
         sudo chmod 600 key
         ssh -i key -o StrictHostKeyChecking=no ec2-user@$PUBLIC_IP
         ## Create user-defined network
