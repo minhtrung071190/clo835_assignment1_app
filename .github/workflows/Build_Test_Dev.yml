@@ -27,6 +27,14 @@ jobs:
         AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
         AWS_REGION: us-east-1
 
+      - name: Get EC2 Public IP
+        run: |
+          INSTANCE_NAME= "app_server" # Replace with the actual EC2 instance ID
+          PUBLIC_IP=$(aws ec2 describe-instances \
+            --instance-ids $INSTANCE_NAME \
+            --query 'Reservations[0].Instances[0].PublicIpAddress' \
+            --output text)
+          echo "Public IP: $PUBLIC_IP"
     # - name: Build Images
     #   env:
     #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -79,15 +87,6 @@ jobs:
     #     curl -I localhost:8081
     #     curl -I localhost:8082
     #     curl -I localhost:8083
-
-      - name: Get EC2 Public IP
-        run: |
-          INSTANCE_NAME= "app_server" # Replace with the actual EC2 instance ID
-          PUBLIC_IP=$(aws ec2 describe-instances \
-            --instance-ids $INSTANCE_NAME \
-            --query 'Reservations[0].Instances[0].PublicIpAddress' \
-            --output text)
-          echo "Public IP: $PUBLIC_IP"
 
     # - name: Create Pull Request to Prod
     #   if: success()
