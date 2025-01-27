@@ -33,7 +33,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: clo835-assignment1-repository
-        IMAGE_TAG: ${{ github.run_number }}-${{ github.sha }}
+        IMAGE_TAG: ${{ github.run_number }}
       run: |
         # Docker build command
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:mysql-v$IMAGE_TAG -f Dockerfile_mysql .
