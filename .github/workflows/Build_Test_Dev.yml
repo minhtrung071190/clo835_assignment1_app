@@ -82,10 +82,13 @@ jobs:
     - name: Create Pull Request to Prod
       if: success()
       uses: peter-evans/create-pull-request@v5
+      permissions:
+        contents: write
+        pull-requests: write
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        base: prod
-        branch: dev
+        base: dev
+        branch: prod
         title: "Automated PR: Promote changes from dev to prod"
         body: "This pull request promotes changes from dev to prod."
         draft: false
