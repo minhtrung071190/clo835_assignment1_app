@@ -1,5 +1,5 @@
 name: Build, Publish Images to ECR
-# updated ECR Repo  01/27
+# updated ECR Repo  01/28
 on: 
   push:
     branches: [ prod ]
