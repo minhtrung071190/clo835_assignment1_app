@@ -63,6 +63,9 @@ jobs:
           export IMAGE_TAG=${{ github.run_number }}
           export DBPASS=${{ secrets.DBPASS }}
           export DBUSER=${{ secrets.DBUSER }}
+          ## Login to ECR
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
+          
           ## Create user-defined network
           docker network create my_app_network || echo "Network already exists"
           ## Run my_db
